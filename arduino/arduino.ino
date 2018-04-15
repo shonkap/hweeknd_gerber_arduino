@@ -2,6 +2,8 @@
 // Calvin Gagliano
 // arduino.ino
 
+#include <Servo.h>
+
 int commands[50];
 String xs[50];
 String ys[50];
