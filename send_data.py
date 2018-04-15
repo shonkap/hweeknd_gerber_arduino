@@ -102,16 +102,21 @@ while 1:
     if x == 1:
         data = []
 
-    # Sends data to Arduino by converting to binary. Each piece is Command, Xcoord, Ycoord in theory.
+    # Sends data to Arduino by converting to binary.
+    # First, combine data together.
     # If X/Y coord is missing, just send the one is there.
+    fulldata = ""
     for z in range(0, len(data)):
-        ser.write(str.encode(data[z]))
+        fulldata = fulldata + data[z]
+
+    if fulldata != "":
+        ser.write(str.encode(fulldata))
         time.sleep(6)
         # Wait for Arduino buffer
         # Grab message that Arduino sends (just same as input for now)
         msg = ser.readline(ser.inWaiting())
         print("From Arduino: ")
-        print(msg)
+        print(msg.decode())
 
     data = []
 
