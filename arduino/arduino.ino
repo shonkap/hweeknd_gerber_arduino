@@ -2,9 +2,9 @@
 // Calvin Gagliano
 // arduino.ino
 
-int commands[100];
-int xs[100];
-int ys[100];
+int commands[50];
+String xs[50];
+String ys[50];
 
 String readString;
 int spot = 0;
@@ -42,28 +42,26 @@ void serialEvent() {
     if(readString.charAt(idx) == 'X'){
       idx++;
       while(isDigit(readString.charAt(idx)) || readString.charAt(idx) == '-'){
-        placeholder = placeholder + String(readString.charAt(idx));
+        placeholder += readString.charAt(idx);
         idx++;
       }
-      xs[spot] = placeholder.toInt();
+      xs[spot] = atoi(placeholder.c_str());
     }
 
-    xs[spot] = readString.charAt(4) - '0'; // Gives 4 which it should
+    //xs[spot] = readString.charAt(4) - '0'; // Gives 4 which it should
     
     // Reset placeholder
-    placeholder = "";
+    //placeholder = "";
 
     // Get Ycoord if it exists
     /*if(readString.charAt(idx) == 'Y') {
       idx++;
       while(isDigit(readString.charAt(idx)) || readString.charAt(idx) == '-'){
-        placeholder = placeholder + String(readString.charAt(idx));
+        placeholder += readString.charAt(idx);
         idx++;
       }
-      ys[spot] = placeholder.toInt();
+      ys[spot] = placeholder;
     }*/
-    
-    Serial.print(readString);
     Serial.print(xs[spot]);
     spot++;
     readString = "";
