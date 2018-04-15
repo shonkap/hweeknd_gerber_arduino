@@ -45,24 +45,24 @@ void serialEvent() {
         placeholder += readString.charAt(idx);
         idx++;
       }
-      xs[spot] = atoi(placeholder.c_str());
+      xs[spot] = placeholder;
     }
 
     //xs[spot] = readString.charAt(4) - '0'; // Gives 4 which it should
     
-    // Reset placeholder
-    //placeholder = "";
+    //Reset placeholder
+    placeholder = "";
 
     // Get Ycoord if it exists
-    /*if(readString.charAt(idx) == 'Y') {
+    if(readString.charAt(idx) == 'Y') {
       idx++;
       while(isDigit(readString.charAt(idx)) || readString.charAt(idx) == '-'){
         placeholder += readString.charAt(idx);
         idx++;
       }
       ys[spot] = placeholder;
-    }*/
-    Serial.print(xs[spot]);
+    }
+    Serial.print(xs[spot] + " " + ys[spot] + " " + commands[spot]);
     spot++;
     readString = "";
   }
