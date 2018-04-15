@@ -127,4 +127,13 @@ while 1:
     # Sleep for .3 seconds
     time.sleep(1)
 
+ser.write(str.encode("done"))
+time.sleep(6)
+msg = ser.readline(ser.inWaiting())
+print("From Arduino: ")
+print(msg.decode())
+time.sleep(10)
+msg = ser.readline(ser.inWaiting())
+print("From Arduino: ")
+print(msg.decode())
 file.close
