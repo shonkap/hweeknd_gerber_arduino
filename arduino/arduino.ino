@@ -1,3 +1,5 @@
+String readString;
+
 void setup() {
   // put your setup code here, to run once:
   // Begin collecting information here
@@ -10,8 +12,17 @@ void loop() {
 }
 
 void serialEvent() {
+  while(!Serial.available()){}
   while(Serial.available()){
-     
+    if(Serial.available() > 0){
+      char c = Serial.read();
+      readString += c; 
+    }
+  }
+
+  if(readString.length() > 0){
+    Serial.print(readString);
+    readString = "";
   }
 }
 

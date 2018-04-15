@@ -16,15 +16,38 @@ def parse(line):
     if data[0] == 1:
         return 1
     #Extrapolate the X coordinate
+    #Get index of where "X" is
     xindx = line.find('X');
-    xcoord = ""
-    while line[xindx+1] in range(0, 9):
-        xcoord = xcoord + line[xindx+1]
-        xindx += 1
+    xcoord = "X"
+    #If 'X' exists in the line
+    if xindx != -1:
+        # If it's a digit or a negative sign
+        while line[xindx+1].isdigit() or line[xindx+1] == '-':
+            # Add it to overall string to be transferred
+            xcoord = xcoord + line[xindx+1]
+            xindx += 1
+        # If the line is not empty
+        if xcoord != "":
+            data.append(xcoord)
 
+    #Extrapolate the Y coordinate
+    # Get index of "Y"
+    # Same thing for Y coordinate
+    yindx = line.find('Y');
+    ycoord = "Y";
+    #If 'Y' exists in the line
+    if yindx != -1:
+        # While the next character is a number or negative
+        while line[yindx+1].isdigit() or line[yindx+1] == '-':
+            ycoord = ycoord + line[yindx+1]
+            yindx += 1
+        if ycoord != "":
+            data.append(ycoord)
 
+    return 0
 
 def get_command(line):
+    # Find Command in line
     if "D01" in line:
         return "D01"
     elif "D02" in line:
@@ -41,7 +64,8 @@ import sys
 import time
 
 # Set serial port to COM3 w/ 9600 bitrate
-ser = serial.Serial("COM3", 9600)
+ser = serial.Serial("COM3", 9600,timeout=5)
+print("Opening connection with COM3, 9600 bitrate")
 
 # Open gerber file
 file = open("gerber.gbr", 'r')
@@ -58,6 +82,7 @@ data = []
 while 1:
     # Read line
     line = file.readline()
+    print(line);
 
     # Check
     x = 0
@@ -66,6 +91,9 @@ while 1:
     if not line:
         break
 
+    if get_command(line) != 1:
+        startParse = True
+
     # Start parser
     if startParse == True:
         x = parse(line)
@@ -73,14 +101,25 @@ while 1:
     # Check for failure
     if x == 1:
         data = []
-    else:
-        #ser.write(data)
+
+    # Sends data to Arduino by converting to binary. Each piece is Command, Xcoord, Ycoord in theory.
+    # If X/Y coord is missing, just send the one is there.
+    for z in range(0, len(data)):
+        ser.write(str.encode(data[z]))
+        time.sleep(6)
+        # Wait for Arduino buffer
+        # Grab message that Arduino sends (just same as input for now)
+        msg = ser.readline(ser.inWaiting())
+        print("From Arduino: ")
+        print(msg)
+
+    data = []
 
     # Find # of integer/decimal digits, begin parser
     # The line that defines this is typically at the top and is
     # %FSLAX(dig_int)(dig_dec)Y(dig_int)(dig_dec)*%
 
-    # Sleep for 3 milliseconds
-    time.sleep(3)
+    # Sleep for .3 seconds
+    time.sleep(1)
 
 file.close
