@@ -20,8 +20,8 @@ X46990000Y-40640000D03*                // D01 = moves to point, while drawing
 X55880000Y-76200000D03*                // D02 = moves to point, no draw
 D12*                                   // D03 = sets origin to that point
 X53594000Y-76200000D03*
-X51308000Y-76200000D03*                // G-commands =
-D13*
+X51308000Y-76200000D03*                // G-commands
+D13*                                   // G02 = clockwise, G03 = counterclockwise, G74 = single quadrant, G75 = multi quadrant
 X46990000Y-71120000D03*
 D14*
 X46990000Y-78740000D03*
