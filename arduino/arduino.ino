@@ -27,6 +27,7 @@ Stepper StepperY(stepsPerRevolution, 4, 5, 6, 7);
 // Limit Switch Pins
 int stopX = 2;
 int stopY = 3;
+int zeroed = 1;
 
 // interrupt signals
 volatile byte stateX = LOW;
@@ -42,6 +43,7 @@ void zeroFun(){
   while(digitalRead(stopY != HIGH){
     StepperY.step(10);
   }
+  zeroed = 0;
   interrupts();
 }
 
@@ -91,7 +93,10 @@ void markerDown() {
 }
 
 void loop() {
- zeroFun();
+ //zeros the x and y
+ if(zeroed == 1){
+    zeroFun();
+ }
   // put your main code here, to run repeatedly:
   // If loaded, run commands
   if(loaded == 1){
@@ -120,6 +125,7 @@ void movetoposition(int i){
 
 // Interprets commands to control marker
 void motion(){
+  zeroed = 1;
   // For the # of commands
   for(int i = 0; i < spot; i++){
     // If the command is type D03 (flash)
