@@ -24,6 +24,27 @@ int angle = 0; //initialize angle for servo
 Stepper StepperX(stepsPerRevolution, 8, 9, 10, 11);
 Stepper StepperY(stepsPerRevolution, 4, 5, 6, 7);
 
+// Limit Switch Pins
+int stopX = 2;
+int stopY = 3;
+
+// interrupt signals
+volatile byte stateX = LOW;
+volatile byte stateY = LOW;
+
+// initilizes x and y to zero 
+void zeroFun(){
+  noInterrupts();
+  while(digitalRead(stopX != HIGH){
+    StepperX.step(10);
+  }
+
+  while(digitalRead(stopY != HIGH){
+    StepperY.step(10);
+  }
+  interrupts();
+}
+
 void setup() {
   // put your setup code here, to run once:
   // Begin collecting information here
@@ -33,24 +54,44 @@ void setup() {
   StepperY.setSpeed(60);
 
   // Sets pins for Z Linear Actuator
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+ 
+ // initialize the limits pin as an input:
+  pinMode(stopY, INPUT);
+  pinMode(stopX, INPUT);
+  attachInterrupt(digitalPinToInterrupt(stopY), StepX, HIGH);
+  attachInterrupt(digitalPinToInterrupt(stopX), StepY, HIGH);
 
 }
 
+// interrupts movement in direction
+void stopX(){
+  //step back amount
+  //or however get info from serial
+  motion(); 
+}
+void stopY(){
+  //step back amount
+  //or however get info from serial
+  motion(); 
+}
+
+
 void markerUp(){
-  digitalWrite(2, LOW);
-  digitalWrite(3, HIGH);
+  digitalWrite(12, LOW);
+  digitalWrite(13, HIGH);
   delay(500);
 }
 
 void markerDown() {
-  digitalWrite(2, HIGH);
-  digitalWrite(3, LOW);
+  digitalWrite(12, HIGH);
+  digitalWrite(13, LOW);
   delay(500);
 }
 
 void loop() {
+ zeroFun();
   // put your main code here, to run repeatedly:
   // If loaded, run commands
   if(loaded == 1){
